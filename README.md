@@ -1,0 +1,2 @@
+# mem_birthday
+一个适用hoshinobot的群友生日祝贺插件
