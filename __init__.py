@@ -7,7 +7,7 @@ from .comp_birth import *
 from .update_age import *
 
 
-sv = Service('member_birthday', enable_on_default=False)
+sv = Service('member_birthday', enable_on_default=True)
 
 # 正常来说只要初始化一次就够了
 @sv.on_fullmatch('群员生日初始化')
