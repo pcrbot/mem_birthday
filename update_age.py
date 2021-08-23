@@ -1,6 +1,7 @@
 import os 
 import yaml
 
+# 获取文件中的数据并删除旧版数据
 def get_tod(gid, uid):
     current_dir = os.path.join(os.path.dirname(__file__), 'config.yml')
     file = open(current_dir, 'r', encoding="UTF-8")
@@ -22,6 +23,7 @@ def get_tod(gid, uid):
             config['Info'][gid].remove(mem_data)
             return current_dir, config, tod_age
 
+# 写入新的数据，将tod_age移到yes_age
 async def repalce_age(bot, gid):
     group_info = await bot.get_group_member_list(group_id = gid, no_cache = True)
     for each_mem in group_info:

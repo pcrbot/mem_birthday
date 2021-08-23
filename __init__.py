@@ -20,17 +20,17 @@ async def init_birth(bot, ev):
     _current_dir = os.path.join(os.path.dirname(__file__), 'config.yml')
     if not os.path.exists(_current_dir):
         _bot = hoshino.get_bot()
-        msg = '所有群的群成员信息正在初始化中，请耐心等待...\n（初始化时间受群数量和人数影响，总共两三百人大概要1分钟）'
+        msg = '所有群的群成员信息正在初始化中，请耐心等待...\n（初始化时间受群数量和人数影响，总共两三百人大概要1分钟或者更久）'
         await bot.send(ev, msg)
         await create_yml(_bot, _current_dir)
-        msg = '初始化成功，您可前往本文件目录查看 config.yml 内容是否有误'
+        msg = '初始化成功，您可前往本文件所在的目录查看 `config.yml` 内容是否有误\n数据结构非常简单，user_id是QQ号，yes_age是昨天的年龄，tod_age是今天的年龄'
         await bot.send(ev, msg)
     else:
-        msg = '初始化失败！文件已存在！若想重新初始化，请手动到本文件目录删除 config.yml'
+        msg = '初始化失败，文件已存在不可再初始化！\n为防止误触，不提供群内删除文件的命令，若想重新初始化，请手动到本文件目录删除`config.yml`'
         await bot.send(ev, msg)
 
 # 推送生日祝福
-@sv.scheduled_job('cron', hour='8', minute='00') # 早上8点推送祝福，让你在赶着上班的同时得到一丝温馨感
+@sv.scheduled_job('cron', hour='8', minute='00') # 早上8点推送祝福，让你在赶着上班上学的同时得到一丝温馨感（
 async def auto_compare():
     bot = hoshino.get_bot()
     glist_info = await bot.get_group_list()
@@ -49,6 +49,7 @@ async def auto_compare():
 @sv.scheduled_job('cron', hour='2', minute='00') # 凌晨两点更新数据
 async def auto_update():
     bot = hoshino.get_bot()
+    sv.logger.info('正在更新群友信息...预计用时几分钟')
     glist_info = await bot.get_group_list()
     for each_g in glist_info:
         gid = each_g['group_id']
