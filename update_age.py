@@ -1,5 +1,6 @@
 import os 
 import yaml
+import time
 
 # 获取文件中的数据并删除旧版数据
 def get_tod(gid, uid):
@@ -8,6 +9,7 @@ def get_tod(gid, uid):
     file_data = file.read()
     file.close()
     config = yaml.load(file_data, Loader=yaml.FullLoader)
+    tod_age = 0
     for user in config['Info'][gid]:
         user_id = int(user['member']['user_id'])
         if user_id == uid:
@@ -21,16 +23,18 @@ def get_tod(gid, uid):
                 }
             }
             config['Info'][gid].remove(mem_data)
-            return current_dir, config, tod_age
+    return current_dir, config, tod_age
 
 # 写入新的数据，将tod_age移到yes_age
 async def repalce_age(bot, gid):
     group_info = await bot.get_group_member_list(group_id = gid, no_cache = True)
     for each_mem in group_info:
+        time.sleep(1)
         uid = each_mem['user_id']
         # 这个区间的几个B是QQ自己的机器人，不会有人还用这个机器人吧
         if uid < 2854196300 or uid > 2854196399:
-            current_dir, config, yes_age = get_tod(gid, uid)
+            current_dir, config, tod_age = get_tod(gid, uid)
+            yes_age = tod_age
             mem_info = await bot.get_stranger_info(user_id = uid, no_cache = True)
             age = mem_info['age']
             mem_data = {

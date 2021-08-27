@@ -1,4 +1,5 @@
 import yaml
+import time
 
 # 创建Data，并加入群组数据
 async def create_yml(_bot, _current_dir):
@@ -26,7 +27,8 @@ async def write_info(_bot, data, gid):
     '''
     group_info = await _bot.get_group_member_list(group_id = gid, no_cache = True)
     for each_mem in group_info:
-        uid = each_mem['user_id']
+        time.sleep(1)
+        uid = int(each_mem['user_id'])
         # 这个区间的几个B是QQ自己的机器人，不会有人还用这个机器人吧
         if uid < 2854196300 or uid > 2854196399:
             mem_info = await _bot.get_stranger_info(user_id = uid, no_cache = True)
