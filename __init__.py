@@ -43,7 +43,6 @@ async def auto_compare():
             await bot.send_group_msg(group_id=gid, message=msg)
         else:
             sv.logger.info(f'今天群号{gid}里没有群友生日欸~')
-            return
 
 # 更新每天的年龄，运行起来也要挺久的时间
 @sv.scheduled_job('cron', hour='2', minute='00') # 凌晨两点更新数据
