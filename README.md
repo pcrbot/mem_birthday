@@ -38,6 +38,8 @@
 
 ## 更新日志
 
+21-09-10    v1.3    新增自动更新数据完私聊维护组的提醒，万一哪里卡住了可以试试手动更新
+
 21-09-04    v1.2    修复了在已经初始化过之后，机器人再加群或者某个群有新成员导致的问题
 
 21-08-27    v1.1    修复了报错问题和概率性信息更新错误的问题，之前用1.0版的建议删除初始化的 `config.yml` 重新初始化一下
@@ -63,7 +65,7 @@ https://github.com/pcrbot/mem_birthday
 ```
 命令如下：
 
-[群员生日初始化] 初始化配置（限维护组，且仅限初始化一次，初始化时间受群数量和人数影响，总共两三百人大概要5分钟或者更久）
+[群员生日初始化] 初始化配置（限维护组，且仅限初始化一次，初始化时间受群数量和人数影响，总共两三百人大概要1分钟或者更久）
 
 注：为防止误触，不提供群内删除文件的命令，若想重新初始化，请手动到本文件目录删除`config.yml`
 
@@ -91,11 +93,17 @@ https://www.594594.xyz/2021/08/23/mem_birthday_for_hoshino/
     ```
     git clone https://github.com/pcrbot/mem_birthday
     ```
-    
-2. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'mem_birthday'
+2. 安装依赖：
+
+    到HoshinoBot\hoshino\modules\mem_birthday目录下，打开powershell运行
+    ```
+    pip install -r requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
+    ```
+
+3. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'mem_birthday'
 
     然后重启 HoshinoBot
 
-3. 随便找个群
+4. 随便找个群
 
     在群里发送命令'群员生日初始化' ，进行初始化

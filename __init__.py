@@ -48,20 +48,31 @@ async def auto_compare():
 @sv.scheduled_job('cron', hour='2', minute='00') # 凌晨两点更新数据
 async def auto_update():
     bot = hoshino.get_bot()
+    superid = hoshino.config.SUPERUSERS[0]
     sv.logger.info('正在更新群友信息...预计用时几分钟')
     glist_info = await bot.get_group_list()
     for each_g in glist_info:
         gid = each_g['group_id']
         await repalce_age(bot, gid)
     sv.logger.info('所有群友年龄信息更新完成')
+    msg = '所有群友年龄信息自动更新完成'
+    await bot.send_private_msg(user_id=superid, message=msg)
 
 # 测试用的
 @sv.on_fullmatch('手动更新生日')
 async def update_bir(bot, ev):
-    # bot = hoshino.get_bot()
+    if not priv.check_priv(ev, priv.SUPERUSER):
+        msg = '很抱歉您没有权限进行此操作，该操作仅限维护组'
+        await bot.send(ev, msg)
+        return
+    superid = hoshino.config.SUPERUSERS[0]
+    msg = '正在手动更新数据中...'
+    await bot.send(ev, msg)
     sv.logger.info('正在更新群友信息...预计用时几分钟')
     glist_info = await bot.get_group_list()
     for each_g in glist_info:
         gid = each_g['group_id']
         await repalce_age(bot, gid)
     sv.logger.info('所有群友年龄信息更新完成')
+    msg = '所有群友年龄信息手动更新完成'
+    await bot.send_private_msg(user_id=superid, message=msg)
