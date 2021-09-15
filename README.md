@@ -93,17 +93,11 @@ https://www.594594.xyz/2021/08/23/mem_birthday_for_hoshino/
     ```
     git clone https://github.com/pcrbot/mem_birthday
     ```
-2. 安装依赖：
 
-    到HoshinoBot\hoshino\modules\mem_birthday目录下，打开powershell运行
-    ```
-    pip install -r requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
-    ```
-
-3. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'mem_birthday'
+2. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'mem_birthday'
 
     然后重启 HoshinoBot
 
-4. 随便找个群
+3. 随便找个群
 
     在群里发送命令'群员生日初始化' ，进行初始化
