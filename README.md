@@ -81,8 +81,6 @@ https://github.com/pcrbot/mem_birthday
 
 可看下方链接(引流一波我的主页)：
 
-（↓还没写↓）
-
 https://www.594594.xyz/2021/08/23/mem_birthday_for_hoshino/
 
 或本页面：
