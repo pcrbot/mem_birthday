@@ -33,7 +33,7 @@ async def init_birth(bot, ev):
 @sv.scheduled_job('cron', hour='8', minute='00') # 早上8点推送祝福，让你在赶着上班上学的同时得到一丝温馨感（
 async def auto_compare():
     bot = hoshino.get_bot()
-    glist_info = await bot.get_group_list()
+    glist_info = await sv.get_enable_groups()
     for each_g in glist_info:
         gid = each_g['group_id']
         bir_list = judge_bir(gid)
