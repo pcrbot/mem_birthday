@@ -33,9 +33,9 @@ async def init_birth(bot, ev):
 @sv.scheduled_job('cron', hour='8', minute='00') # 早上8点推送祝福，让你在赶着上班上学的同时得到一丝温馨感（
 async def auto_compare():
     bot = hoshino.get_bot()
-    glist_info = await sv.get_enable_groups()
-    for each_g in glist_info:
-        gid = each_g['group_id']
+    glist = await sv.get_enable_groups()
+    for each_g in glist:
+        gid = each_g
         bir_list = judge_bir(gid)
         if bir_list:
             sv.logger.info(f'检测到今天群号{gid}里有{len(bir_list)}个B生日！')
