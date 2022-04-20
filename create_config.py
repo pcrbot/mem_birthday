@@ -1,38 +1,38 @@
+import os 
 import yaml
-import time
+import asyncio
+
+import hoshino
+
+# 首次启动时，若没有`config.yml`则创建配置文件
+async def init_info(bot, glist_info):
+    _current_dir = os.path.join(os.path.dirname(__file__), 'config.yml')
+    if not os.path.exists(_current_dir):
+        hoshino.logger.info('所有群的群成员信息正在初始化中，请耐心等待...')
+        await create_yml(bot, _current_dir, glist_info)
+        hoshino.logger.info('群成员生日信息初始化成功')
+        msg = '群员生日初始化成功'
+    else:
+        msg = '您已经初始化过了！无需再次初始化'
+    return msg
 
 # 创建Data，并加入群组数据
-async def create_yml(_bot, _current_dir):
-    glist_info = await _bot.get_group_list()
+async def create_yml(bot, _current_dir, glist_info):
     data = {'Info': {}}
     for each_g in glist_info:
+        await asyncio.sleep(1)
         group_id = each_g['group_id']
+        hoshino.logger.info(f'开始更新群{group_id}的群员生日')
         data['Info'].setdefault(group_id,[])
-        data = await write_info(_bot, data, group_id)
-    with open(_current_dir, "w", encoding="UTF-8") as f:
-        yaml.dump(data, f,allow_unicode=True)
-
-# 加上个人数据后写入文件，若隐藏生日显示则为0
-async def write_info(_bot, data, gid):
-    '''
-    Q：为什么要获取 member_list 再查一遍 stranger_info 呢？
-
-    A：
-    这里对于go-cqhttp的小可爱可能就是无用步骤了，
-    但是对于部分因为 mirai-native 的原 酷Q用户来说，dll 类型的插件从酷Q用到现在一直不想换掉。
-    但是 cqhttp-mirai 也就是现在的 onebot-mirai 的作者，
-    非常忙以至于没时间更新 onebot-mirai ，所以未跟进 mirai v2.1 后的部分API
-    仔细翻阅 Issue 后发现 0.3.5 版本虽然暂未发布(不知道他要啥时候发)，但其不完全的版本已经实现了
-    用 stranger_info 获取年龄和性别的API，才有这么一步对 onebot-mirai 来说不可或缺的多余步骤
-    '''
-    group_info = await _bot.get_group_member_list(group_id = gid, no_cache = True)
-    for each_mem in group_info:
-        time.sleep(1)
-        uid = int(each_mem['user_id'])
-        # 这个区间的几个B是QQ自己的机器人，不会有人还用这个机器人吧
-        if uid < 2854196300 or uid > 2854196399:
-            mem_info = await _bot.get_stranger_info(user_id = uid, no_cache = True)
-            age = mem_info['age']
+        group_info = await bot.get_group_member_list(group_id = group_id, no_cache = True)
+        for each_mem in group_info:
+            await asyncio.sleep(1)
+            uid = int(each_mem['user_id'])
+            # 这个区间的几个B是QQ自己的机器人，不会有人还用这个机器人吧
+            if uid >= 2854196300 and uid <= 2854196399:
+                continue
+            mem_info = await bot.get_stranger_info(user_id = uid, no_cache = True)
+            age = int(mem_info['age'])
             mem_data = {
                 'member':{
                     'user_id': uid,
@@ -40,5 +40,7 @@ async def write_info(_bot, data, gid):
                     'tod_age': age
                 }
             }
-            data['Info'][gid].append(mem_data)
-    return data
+            data['Info'][group_id].append(mem_data)
+        hoshino.logger.info(f'群{group_id}的群员生日更新完成！')
+    with open(_current_dir, "w", encoding="UTF-8") as f:
+        yaml.dump(data, f,allow_unicode=True)
