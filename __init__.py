@@ -8,7 +8,7 @@ from .create_config import *
 from .comp_birth import *
 from .update_age import *
 
-sv = Service('member_birthday', enable_on_default=True)
+sv = Service('member_birthday', help_='每天早上8点推送祝福当天生日群友', enable_on_default=True)
 
 current_dir = os.path.join(os.path.dirname(__file__), 'config.yml')
 
