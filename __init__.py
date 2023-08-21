@@ -32,7 +32,7 @@ async def auto_compare():
     bot = hoshino.get_bot()
     glist_info = await sv.get_enable_groups()
     for gid in glist_info:
-        await asyncio.sleep(1)
+        await asyncio.sleep(5)
         bir_list = await judge_bir(gid)
         if bir_list:
             sv.logger.info(f'检测到今天群号{gid}里有{len(bir_list)}位群友生日！')
@@ -50,11 +50,14 @@ async def auto_update():
     bot = hoshino.get_bot()
     superid = hoshino.config.SUPERUSERS[0]
     sv.logger.info('正在更新群友信息...预计用时几分钟')
-    glist_info = await bot.get_group_list()
-    await repalce_age(bot, glist_info)
-    sv.logger.info('所有群友年龄信息更新完成')
-    msg = '所有群友年龄信息自动更新完成'
-    await bot.send_private_msg(user_id=superid, message=msg)
+    try:
+        glist_info = await bot.get_group_list()
+        await repalce_age(bot, glist_info)
+        sv.logger.info('所有群友年龄信息更新完成')
+    except Exception as e:
+        msg ='所有群友年龄信息更新失败：' + str(e)
+        sv.logger.error(msg)
+        await bot.send_private_msg(user_id=superid, message=msg)
 
 # 测试用的
 @sv.on_fullmatch('手动更新群员生日')
@@ -67,10 +70,14 @@ async def update_bir(bot, ev):
     msg = '正在手动更新数据中...'
     await bot.send(ev, msg)
     sv.logger.info('正在更新群友信息...预计用时几分钟')
-    glist_info = await bot.get_group_list()
-    await repalce_age(bot, glist_info)
-    sv.logger.info('所有群友年龄信息更新完成')
-    msg = '所有群友年龄信息手动更新完成'
+    try:
+        glist_info = await bot.get_group_list()
+        await repalce_age(bot, glist_info)
+        msg = '所有群友年龄信息手动更新完成'
+        sv.logger.info(msg)
+    except Exception as e:
+        msg ='所有群友年龄信息手动更新失败：' + str(e)
+        sv.logger.error(msg)
     await bot.send(ev, msg)
 
 # 自动删除退群的群员信息
